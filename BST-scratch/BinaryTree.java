@@ -188,32 +188,23 @@ public class BinaryTree {
   }
 
 
-  public void insertHelper(Entry entry,Comparable key,BinaryTreeNode node){
-    if(key.compareTo(node.entry.key)<=0){
-      if(node.leftChild==null){
-        node.leftChild=new BinaryTreeNode(entry,node);
-      }else{
-        insertHelper(entry,key,node.leftChild);
-      }
-    }
-    else{
-      if(node.rightChild==null){
-        node.rightChild=new BinaryTreeNode(entry,node);
-      }else{
-        insertHelper(entry,key,node.rightChild);
-      }
-    }
+  public BinaryTreeNode insertHelper(Entry entry,Comparable key,BinaryTreeNode node,BinaryTreeNode parent){
+    if(node==null)
+      return new BinaryTreeNode(entry,parent);
+
+    int comp=key.compareTo(node.entry.key);
+
+    if(comp<=0)
+        node.leftChild=insertHelper(entry,key,node.leftChild,node);
+    else
+        node.rightChild=insertHelper(entry,key,node.rightChild,node);
+
+    return node;
   }
 
   public Entry insert(Object key, Object value){
     Entry entry=new Entry(key,value);
-
-
-    if(root==null){
-      root=new BinaryTreeNode(entry);
-    }else{
-      insertHelper(entry,(Comparable) key,root);
-    }
+    root=insertHelper(entry,(Comparable) key,root,null);
     size++;
     return entry;
   }
